@@ -1,0 +1,33 @@
+#!/bin/bash -x
+
+timedatectl set-ntp true
+#curl http://rndmweb.hell/parted.txt -o parted.txt
+curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
+parted -a optimal /dev/sda < parted.txt
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+#replace with swapfile creation...
+#mkswap /dev/sda3
+#swapon /dev/sda3
+#...at some point
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+pacstrap /mnt base efibootmgr grub vim
+genfstab -U /mnt > /mnt/etc/fstab
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Athens /etc/localtime
+arch-chroot /mnt hwclock --systohc
+arch-chroot /mnt echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+arch-chroot /mnt locale-gen
+arch-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
+arch-chroot /mnt echo '::1     localhost' > /etc/hosts
+arch-chroot /mnt echo '127.0.1.1   localhost.localdomain    localhost' > /etc/hosts
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch --removable
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt systemctl enable dhcpcd
+echo 'please run the following command to set a root password: passwd --root /mnt root'

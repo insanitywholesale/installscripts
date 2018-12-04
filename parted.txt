@@ -1,0 +1,8 @@
+mklabel gpt
+unit mib
+mkpart primary 1 513
+name 1 boot
+mkpart primary 514 -1
+name 2 root
+set 1 boot on
+quit
