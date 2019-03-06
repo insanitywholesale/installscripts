@@ -1,0 +1,20 @@
+#!/bin/bash
+
+sudo apt remove swi-prolog
+sudo apt autoremove
+sudo apt install build-essential autoconf curl chrpath pkg-config ncurses-dev libreadline-dev libedit-dev libunwind-dev libgmp-dev libssl-dev unixodbc-dev zlib1g-dev libarchive-dev libossp-uuid-dev libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev libxpm-dev libxt-dev libdb-dev libpcre3-dev libyaml-dev openjdk-8-jdk junit cmake git ninja-build libqt5gui5 libqt5widgets5 libqt5quickwidgets5 libqwt-qt5-dev libqwt-qt5-6 libqwt-headers qt5-default && echo "dependency installation: SUCCESS"
+
+mkdir ~/gits
+cd gits
+git clone https://github.com/SWI-Prolog/swipl-devel.git && echo "repository clone: SUCCESS"
+cd swipl-devel
+git submodule update --init && echo "submodule update: SUCCESS"
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DSWIPL_PACKAGES_QT=ON -G Ninja .. && echo "configuration with cmake: SUCCESS"
+ninja && echo "compilation: SUCCESS"
+ctest -j 1
+sudo ninja install && echo "swi-prolog installation: SUCCESS"
+
+echo "to start swi-prolog from the CLI use 'swipl'"
+echo "to start the graphical program use 'swipl-win'"
