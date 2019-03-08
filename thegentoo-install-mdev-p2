@@ -1,0 +1,29 @@
+#!/bin/bash -x
+
+source /etc/profile
+export PS1="(chroot) ${PS1}"
+mount /dev/sda1 /boot
+emerge-webrsync
+emerge --sync --quiet
+eselect profile list
+eselect profile set 12
+echo "sys-apps/busybox mdev" > /etc/portage/package.use
+emerge -vuDU --with-bdeps=y --with-bdeps=y @world
+echo "Europe/Athens" > /etc/timezone
+emerge --config sys-libs/timezone-data
+echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+echo 'en_US ISO-8859-1' >> /etc/locale.gen
+locale-gen
+eselect locale list
+#echo "enter locale number"
+#read LOCALE
+#eselect locale set $LOCALE
+eselect locale set 1
+env-update && source /etc/profile && export PS1="(chroot) $PS1"
+mkdir /etc/portage/patches && mkdir /etc/portage/package.accept_keywords
+emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix
+curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
+(cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
+grub-install --target=x86_64-efi --efi-directory=/boot --removable
+grub-mkconfig -o /boot/grub/grub.cfg
+echo "exit the chroot and reboot into glory"

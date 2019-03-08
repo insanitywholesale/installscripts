@@ -1,0 +1,23 @@
+#!/bin/bash -x
+
+curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
+parted -a optimal /dev/sda < parted.txt
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mount /dev/sda2 /mnt/gentoo
+TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | egrep '^2' | grep -o '^\S*'` 
+curl -o /mnt/gentoo/stage3.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
+(cd /mnt/gentoo && tar xpvf stage3.tar.xz --xattrs-include='*.*' --numeric-owner)
+curl -o /mnt/gentoo/etc/portage/make.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/mdev-make.conf
+cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+mount --types proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
+mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
+chmod 1777 /dev/shm
+curl -o /mnt/gentoo/thegentoo-install-mdev-p2 https://gitlab.com/insanitywholesale/installscripts/raw/master/thegentoo-install-mdev-p2
+chroot /mnt/gentoo /bin/bash -c "/thegentoo-install-mdev-p1"
