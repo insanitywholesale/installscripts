@@ -21,9 +21,19 @@ eselect locale list
 eselect locale set 1
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 mkdir /etc/portage/patches && mkdir /etc/portage/package.accept_keywords
-emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix vim htop tmux
+curl -o /genfstab https://git.archlinux.org/arch-install-scripts.git/plain/genfstab.in
+chmod +x /genfstab
+(cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
+emerge -v --noreplace netifrc
+emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix vim htop tmux cronie rsyslog
+(cd /etc/init.d && ln -s net.lo net.eth0)
+rc-update add net.eth0 default
+rc-update add sshd default
+rc-update add cronie default
+rc-update add rsyslog default
 curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
-grub-install --target=x86_64-efi --efi-directory=/boot --removable
+curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "exit the chroot and reboot into glory"
