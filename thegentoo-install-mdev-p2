@@ -30,10 +30,22 @@ emerge -v linux-firmware gentoo-sources sudo pciutils grub eix gentoolkit layman
 # disabled for now, it's more relevant to post-install
 # emerge -v xorg-server i3 i3status dmenu feh setxkbmap xkill corefonts dejavu
 (cd /etc/init.d && ln -s net.lo net.eth0)
+echo '#!/bin/bash' > /etc/local.d/000.start
+echo 'mount devpts' >> /etc/local.d/000.start
+echo 'chmod 1777 /dev/shm' >> /etc/local.d/000.start
+(cd /bin && ln -s /bin/busybox find)
+rc-update del udev sysinit
+rc-update add mdev sysinit 
 rc-update add net.eth0 default
 rc-update add sshd default
 rc-update add cronie default
 rc-update add syslog-ng default
+echo 'mdevver' > /etc/hostname
+echo 'hostname="mdevver"' > /etc/conf.d/hostname
+echo 'dns_domain_lo="hell" > /etc/conf.d/net
+echo 'config_eth0="dhcp"' >> /etc/conf.d/net
+echo '127.0.0.1   mdevver.hell mdevver localhost' > /etc/hosts
+echo'#::1     localhost' >> /etc/hosts
 curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
 curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
