@@ -20,6 +20,6 @@ mount --make-rslave /mnt/gentoo/dev
 test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
-curl -o /mnt/gentoo/thegentoo-install-mdev-p2 https://gitlab.com/insanitywholesale/installscripts/raw/master/thegentoo-install-mdev-p2
+curl -o /mnt/gentoo/thegentoo-install-mdev-p2 https://raw.githubusercontent.com/insanitywholesale/installscripts/master/thegentoo-install-mdev-p2
 chmod +x /mnt/gentoo/thegentoo-install-mdev-p2
 chroot /mnt/gentoo /bin/bash -c "/thegentoo-install-mdev-p2"
