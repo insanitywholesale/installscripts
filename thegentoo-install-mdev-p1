@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
+mkdir /mnt/gentoo
 curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
 parted -a optimal /dev/sda < parted.txt
@@ -20,4 +21,5 @@ test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
 curl -o /mnt/gentoo/thegentoo-install-mdev-p2 https://gitlab.com/insanitywholesale/installscripts/raw/master/thegentoo-install-mdev-p2
-chroot /mnt/gentoo /bin/bash -c "/thegentoo-install-mdev-p1"
+chmod +x /mnt/gentoo/thegentoo-install-mdev-p2
+chroot /mnt/gentoo /bin/bash -c "/thegentoo-install-mdev-p2"
