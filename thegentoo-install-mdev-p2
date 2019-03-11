@@ -3,6 +3,8 @@
 source /etc/profile
 export PS1="(chroot) ${PS1}"
 mount /dev/sda1 /boot
+mkdir -p /etc/portage/repos.conf
+curl -o /etc/portage/repos.conf/gentoo.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/gentoo.conf
 emerge-webrsync
 emerge --sync --quiet
 eselect profile list
