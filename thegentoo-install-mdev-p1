@@ -22,4 +22,7 @@ mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
 curl -o /mnt/gentoo/thegentoo-install-mdev-p2 https://raw.githubusercontent.com/insanitywholesale/installscripts/master/thegentoo-install-mdev-p2
 chmod +x /mnt/gentoo/thegentoo-install-mdev-p2
+curl -o /genfstab https://git.archlinux.org/arch-install-scripts.git/plain/genfstab.in
+chmod +x /genfstab
+(cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
 chroot /mnt/gentoo /bin/bash -c "/thegentoo-install-mdev-p2"
