@@ -7,7 +7,9 @@ emerge-webrsync
 emerge --sync --quiet
 eselect profile list
 eselect profile set 12
-echo "sys-apps/busybox mdev" > /etc/portage/package.use
+echo "sys-apps/busybox mdev static" > /etc/portage/package.use/busybox
+echo "sys-apps/hwids -net -pci -udev -usb" > /etc/portage/package.use/hwids
+emerge -cv sys-fs/eudev virtual/udev sys-fs/udev-init-scripts
 emerge -vuDU --with-bdeps=y --with-bdeps=y @world
 echo "Europe/Athens" > /etc/timezone
 emerge --config sys-libs/timezone-data
@@ -26,6 +28,7 @@ chmod +x /genfstab
 (cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
 emerge -v --noreplace netifrc
 emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix vim htop tmux cronie rsyslog
+emerge -v xorg-server sudo i3 i3status dmenu feh setxkbmap xkill corefonts dejavu
 (cd /etc/init.d && ln -s net.lo net.eth0)
 rc-update add net.eth0 default
 rc-update add sshd default
@@ -34,6 +37,9 @@ rc-update add rsyslog default
 curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
 curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
+useradd -m -G audio,video,portage,wheel angle
+layman -S
+eix-update
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
 grub-mkconfig -o /boot/grub/grub.cfg
 echo "exit the chroot and reboot into glory"
