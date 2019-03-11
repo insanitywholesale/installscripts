@@ -21,7 +21,7 @@ eselect locale list
 eselect locale set 1
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 mkdir /etc/portage/patches && mkdir /etc/portage/package.accept_keywords
-emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix
+emerge -v linux-firmware gentoo-sources pciutils grub eix gentoolkit layman eix vim htop tmux
 curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
 grub-install --target=x86_64-efi --efi-directory=/boot --removable
