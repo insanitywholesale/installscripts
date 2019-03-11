@@ -33,7 +33,7 @@ emerge -v linux-firmware gentoo-sources sudo pciutils grub eix gentoolkit layman
 rc-update add net.eth0 default
 rc-update add sshd default
 rc-update add cronie default
-rc-update add rsyslog default
+rc-update add syslog-ng default
 curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
 curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
