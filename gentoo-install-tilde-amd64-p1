@@ -10,7 +10,7 @@ mount /dev/sda2 /mnt/gentoo
 TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | egrep '^2' | grep -o '^\S*'` 
 curl -o /mnt/gentoo/stage3.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
 (cd /mnt/gentoo && tar xpvf stage3.tar.xz --xattrs-include='*.*' --numeric-owner)
-curl -o /mnt/gentoo/etc/portage/make.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/mdev-make.conf
+curl -o /mnt/gentoo/etc/portage/make.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/tilde-make.conf
 cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 mount --types proc /proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys
@@ -26,3 +26,4 @@ chroot /mnt/gentoo /bin/bash -c "/gentoo-install-tilde-amd64-p2"
 curl -o /genfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
 chmod +x /genfstab
 (cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
+echo "if something is broken, don't @ me"

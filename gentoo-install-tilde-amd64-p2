@@ -3,14 +3,12 @@
 source /etc/profile
 export PS1="(chroot) ${PS1}"
 mount /dev/sda1 /boot
-mkdir -p /etc/portage/repos.conf
+mkdir /etc/portage/repos.conf
 curl -o /etc/portage/repos.conf/gentoo.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/gentoo.conf
 emerge-webrsync
 emerge --sync --quiet
 eselect profile list
 eselect profile set 12
-#echo "sys-apps/busybox mdev static" > /etc/portage/package.use/busybox
-#echo "sys-apps/hwids -net -pci -udev -usb" > /etc/portage/package.use/hwids
 emerge -vuDU --with-bdeps=y --with-bdeps=y @world
 echo "Europe/Athens" > /etc/timezone
 emerge --config sys-libs/timezone-data
@@ -51,4 +49,5 @@ layman -S
 eix-update
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
 grub-mkconfig -o /boot/grub/grub.cfg
+echo "don't forget to set root password"
 echo "exit the chroot and reboot into glory"
