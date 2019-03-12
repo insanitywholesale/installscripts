@@ -1,0 +1,54 @@
+#!/bin/bash -x
+
+source /etc/profile
+export PS1="(chroot) ${PS1}"
+mount /dev/sda1 /boot
+mkdir -p /etc/portage/repos.conf
+curl -o /etc/portage/repos.conf/gentoo.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/gentoo.conf
+emerge-webrsync
+emerge --sync --quiet
+eselect profile list
+eselect profile set 12
+#echo "sys-apps/busybox mdev static" > /etc/portage/package.use/busybox
+#echo "sys-apps/hwids -net -pci -udev -usb" > /etc/portage/package.use/hwids
+emerge -vuDU --with-bdeps=y --with-bdeps=y @world
+echo "Europe/Athens" > /etc/timezone
+emerge --config sys-libs/timezone-data
+echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
+echo 'en_US ISO-8859-1' >> /etc/locale.gen
+locale-gen
+eselect locale list
+#echo "enter locale number"
+#read LOCALE
+#eselect locale set $LOCALE
+eselect locale set 1
+env-update && source /etc/profile && export PS1="(chroot) $PS1"
+mkdir /etc/portage/patches
+emerge -v --noreplace netifrc
+emerge -v linux-firmware gentoo-sources sudo pciutils grub eix gentoolkit layman eix vim htop tmux cronie syslog-ng netifrc dhcp
+# disabled for now, it's more relevant to post-install
+emerge -v xorg-server i3 i3status dmenu feh setxkbmap xkill corefonts dejavu fira-mono fira-code j4-dmenu-desktop
+(cd /etc/init.d && ln -s net.lo net.eth0)
+echo '#!/bin/bash' > /etc/local.d/000.start
+echo 'mount devpts' >> /etc/local.d/000.start
+echo 'chmod 1777 /dev/shm' >> /etc/local.d/000.start
+(cd /bin && ln -s /bin/busybox find)
+rc-update add net.eth0 default
+rc-update add sshd default
+rc-update add cronie default
+rc-update add syslog-ng default
+echo 'wallaby' > /etc/hostname
+echo 'hostname="wallaby"' > /etc/conf.d/hostname
+echo 'dns_domain_lo="hell"' > /etc/conf.d/net
+echo 'config_eth0="dhcp"' >> /etc/conf.d/net
+echo '127.0.0.1  wallaby.hell wallaby localhost' > /etc/hosts
+echo'#::1     localhost' >> /etc/hosts
+curl -o /usr/src/linux/.config https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/mdev-compat-desktop-config
+(cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install)
+curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
+useradd -m -G audio,video,portage,wheel angle
+layman -S
+eix-update
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
+grub-mkconfig -o /boot/grub/grub.cfg
+echo "exit the chroot and reboot into glory"
