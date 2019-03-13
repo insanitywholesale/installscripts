@@ -4,8 +4,8 @@ sudo apt remove swi-prolog
 sudo apt autoremove
 sudo apt install build-essential autoconf curl chrpath pkg-config ncurses-dev libreadline-dev libedit-dev libunwind-dev libgmp-dev libssl-dev unixodbc-dev zlib1g-dev libarchive-dev libossp-uuid-dev libxext-dev libice-dev libjpeg-dev libxinerama-dev libxft-dev libxpm-dev libxt-dev libdb-dev libpcre3-dev libyaml-dev openjdk-8-jdk junit cmake git ninja-build libqt5gui5 libqt5widgets5 libqt5quickwidgets5 libqwt-qt5-dev libqwt-qt5-6 libqwt-headers qt5-default && echo "dependency installation: SUCCESS"
 
-mkdir ~/gits
-cd gits
+mkdir $HOME/gitty
+cd $HOME/gitty
 git clone https://github.com/SWI-Prolog/swipl-devel.git && echo "repository clone: SUCCESS"
 cd swipl-devel
 git submodule update --init && echo "submodule update: SUCCESS"
