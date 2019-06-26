@@ -1,34 +1,43 @@
 #!/bin/bash
 
-if [ ! $# -gt 1 ]; then
-	echo "$0: you need to specify at least one argument" >&2
+if [ ! $# -ge 1 ]; then
+	echo "you need to specify at least one argument" >&2
+	echo "example: ./$0 sda"
 	exit 1
 fi
 
-DRIVE="$1"
+if [ ! -b $1 ]; then
+	echo "$1 doesn't exist" >&2
+fi
 
-curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+DRIVE="$1"
 dd if=/dev/zero of=/dev/"$DRIVE" bs=1024 count=1 conv=notrunc
-parted -a optimal /dev/"$DRIVE" < parted.txt
+
+if [ "$2" = "" ] || [ "$2" = "uefi"] || [ "$2" = "UEFI" ]; then
+	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+	parted -a optimal /dev/"$DRIVE" < parted.txt
+elif [ "$2" = "bios" ] || [ "$2" = "BIOS"]; then
+	# bios shizzle here
+fi
 
 mkfs.fat -F32 /dev/"$DRIVE"1
 mkfs.ext4 /dev/"$DRIVE"2
 
 mkdir /mnt/gentoo
+mount /dev/"$DRIVE"2 /mnt/gentoo
+mount /dev/"$DRIVE"1 /mnt/gentoo/boot
 
 TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage4-amd64-minimal.txt | egrep '^2' | grep -o '^\S*'`
 curl -o /mnt/gentoo/stage4.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
 (cd /mnt/gentoo && tar xpvf stage4.tar.xz --xattrs-include='*.*' --numeric-owner)
 
-mount /dev/"$DRIVE"2 /mnt/gentoo
 mount --types proc /proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys
 mount --make-rslave /mnt/gentoo/sys
 mount --rbind /dev /mnt/gentoo/dev
 mount --make-rslave /mnt/gentoo/dev
-mount /dev/"$DRIVE"1 /mnt/gentoo/boot
 
-(curl -o /tmp/mkfstab https://github.com/insanitywholesale/installscripts/blob/master/generatefilesystable | bash)
+curl -o /tmp/mkfstab https://github.com/insanitywholesale/installscripts/blob/master/generatefilesystable
 bash -c '/tmp/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
 
 chroot /mnt/gentoo /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable"
