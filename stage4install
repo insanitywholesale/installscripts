@@ -6,14 +6,21 @@ if [ ! $# -ge 1 ]; then
 	exit 1
 fi
 
-if [ ! -b $1 ]; then
+if [ ! -b /dev/"$1" ]; then
 	echo "$1 doesn't exist" >&2
 fi
 
 DRIVE="$1"
 dd if=/dev/zero of=/dev/"$DRIVE" bs=1024 count=1 conv=notrunc
 
-if [ "$2" = "" ] || [ "$2" = "uefi"] || [ "$2" = "UEFI" ]; then
+if [ ! -z "$2" ]; then
+	if [ -d /sys/firmware/efi ]; then
+		curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+		parted -a optimal /dev/"$DRIVE" < parted.txt
+	else
+		# bios
+	fi
+elif [ "$2" = "uefi"] || [ "$2" = "UEFI" ]; then
 	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
 	parted -a optimal /dev/"$DRIVE" < parted.txt
 elif [ "$2" = "bios" ] || [ "$2" = "BIOS"]; then
@@ -26,21 +33,21 @@ mkfs.ext4 /dev/"$DRIVE"2
 mkdir /mnt/gentoo
 mount /dev/"$DRIVE"2 /mnt/gentoo
 mount /dev/"$DRIVE"1 /mnt/gentoo/boot
-
-TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage4-amd64-minimal.txt | egrep '^2' | grep -o '^\S*'`
-curl -o /mnt/gentoo/stage4.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
-(cd /mnt/gentoo && tar xpvf stage4.tar.xz --xattrs-include='*.*' --numeric-owner)
-
 mount --types proc /proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys
 mount --make-rslave /mnt/gentoo/sys
 mount --rbind /dev /mnt/gentoo/dev
 mount --make-rslave /mnt/gentoo/dev
 
-curl -o /tmp/mkfstab https://github.com/insanitywholesale/installscripts/blob/master/generatefilesystable
-bash -c '/tmp/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
+TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage4-amd64-minimal.txt | egrep '^2' | grep -o '^\S*'`
+curl -o /mnt/gentoo/stage4.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
+(cd /mnt/gentoo && tar xpvf stage4.tar.xz --xattrs-include='*.*' --numeric-owner)
 
-chroot /mnt/gentoo /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable"
-chroot /mnt/gentoo /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+curl -o /mnt/gentoo/mkfstab https://github.com/insanitywholesale/installscripts/blob/master/generatefilesystable
+bash -c '/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
 
-echo 'run the following command to set a root password: "passwd --root /mnt/gentoo root"'
+chroot /mnt/gentoo /bin/bash -c 'grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable'
+chroot /mnt/gentoo /bin/bash -c 'grub-mkconfig -o /boot/grub/grub.cfg'
+chroot /mnt/gentoo /bin/bash -c 'echo "root:fail" | chpasswd'
+
+#echo 'run the following command to set a root password: "passwd --root /mnt/gentoo root"'
