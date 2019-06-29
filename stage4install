@@ -6,7 +6,7 @@ if [ ! $# -ge 1 ]; then
 	exit 1
 fi
 
-if [ ! -b $1 ]; then
+if [ ! -b /dev/"$1" ]; then
 	echo "$1 doesn't exist" >&2
 fi
 
