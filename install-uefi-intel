@@ -25,8 +25,8 @@ arch-chroot /mnt echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 arch-chroot /mnt locale-gen
 arch-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
-arch-chroot /mnt echo '::1     localhost' > /etc/hosts
-arch-chroot /mnt echo '127.0.1.1   localhost.localdomain    localhost' > /etc/hosts
+arch-chroot /mnt echo '::1     localhost' >> /etc/hosts
+arch-chroot /mnt echo '127.0.1.1   localhost.localdomain    localhost' >> /etc/hosts
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch --removable
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 arch-chroot /mnt systemctl enable dhcpcd

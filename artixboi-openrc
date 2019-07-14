@@ -1,6 +1,5 @@
 #!/bin/bash -x
 
-#curl http://rndmweb.hell/parted.txt -o parted.txt
 curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
 pacman -Syy parted --noconfirm
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
@@ -22,8 +21,8 @@ artools-chroot /mnt echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 artools-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 artools-chroot /mnt locale-gen
 artools-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
-artools-chroot /mnt echo '::1     localhost' > /etc/hosts
-artools-chroot /mnt echo '127.0.1.1   localhost.localdomain    localhost' > /etc/hosts
+artools-chroot /mnt echo '::1     localhost' >> /etc/hosts
+artools-chroot /mnt echo '127.0.1.1   localhost.localdomain    localhost' >> /etc/hosts
 artools-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=artix --removable
 artools-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 artools-chroot /mnt rc-update add dhcpcd default
