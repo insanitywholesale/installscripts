@@ -3,7 +3,7 @@
 mkdir /mnt/gentoo
 curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
-parted -a optimal /dev/sda < parted.txt #might change to the hybrid uefi/bios partition scheme of the handbook
+parted -a optimal /dev/sda < parted-handbook.txt #might change to the hybrid uefi/bios partition scheme of the handbook
 mkfs.fat -F32 /dev/sda1
 mkfs.ext4 /dev/sda2
 mount /dev/sda2 /mnt/gentoo
