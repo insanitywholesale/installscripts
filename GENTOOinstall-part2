@@ -34,7 +34,7 @@ echo 'dns_domain_lo="hell"' > /etc/conf.d/net
 echo 'config_eth0="dhcp"' >> /etc/conf.d/net
 echo '127.0.0.1  starterpack.hell starterpack localhost' > /etc/hosts
 echo'#::1     localhost' >> /etc/hosts
-curl -ohttps://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/config-5.2.0-gentoo-puddle 
+curl -o https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/config-5.2.0-gentoo-puddle 
 (cd /usr/src/linux && make olddefconfig && make -j8 && make modules_install && make install && genkernel --install initramfs)
 curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
