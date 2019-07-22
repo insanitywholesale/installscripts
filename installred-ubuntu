@@ -1,0 +1,5 @@
+#!/bin/sh
+
+apt install -y python3.7 python3.7-dev python3.7-venv python3-pip build-essential libssl-dev libffi-dev git unzip default-jre
+python3.7 -m pip install -U Red-DiscordBot
+redbot-setup

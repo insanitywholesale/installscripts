@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd $(mktemp -d)
+wget https://www.zulip.org/dist/releases/zulip-server-latest.tar.gz
+tar -xf zulip-server-latest.tar.gz
+sh -c "$(pwd)/zulip-server-*/scripts/setup/install --self-signed-cert --email=email@example.com --hostname=zulip.hell"
+echo "this is using a self-signed cert, if this is for real use, replace --self-signed-cert with --certbot"

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+apt update
+apt -y full-upgrade
+apt -y install deluge deluge-console deluged deluge-web
+useradd -m -d /var/lib/deluge -G deluge deluge
+chown -R deluge:deluge /var/lib/deluge
+deluge-console "config -s allow_remote True"
+deluge-console "config allow_remote"
+echo "userboi:userpasswd:10" > /var/lib/deluge/.config/deluge/auth
+ufw allow 8112
+ufw allow 58846
+systemctl start deluged
+deluge-web --fork
+# go to server ip or hostname on port 8112 and the password is deluge
