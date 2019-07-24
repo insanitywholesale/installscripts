@@ -1,0 +1,5 @@
+#!/bin/sh
+
+apt update
+apt -y install mumble-server
+dpkg-reconfigure mumble-server
