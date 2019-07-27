@@ -19,9 +19,15 @@ mount /dev/sda1 /mnt/gentoo/boot
 test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
-curl -o /mnt/gentoo/GENTOOinstall-part2 https://raw.githubusercontent.com/insanitywholesale/installscripts/master/GENTOOinstall-part2
-chmod +x /mnt/gentoo/GENTOOinstall-part2
-chroot /mnt/gentoo /bin/bash -c "/GENTOOinstall-part2"
+if [ "$1" = "vm"]; then
+	curl -o /mnt/gentoo/GENTOOinstall-vm https://raw.githubusercontent.com/insanitywholesale/installscripts/master/GENTOOinstall-vm
+	chmod +x /mnt/gentoo/GENTOOinstall-vm
+	chroot /mnt/gentoo /bin/bash -c "/GENTOOinstall-vm"
+else
+	curl -o /mnt/gentoo/GENTOOinstall-real https://raw.githubusercontent.com/insanitywholesale/installscripts/master/GENTOOinstall-real
+	chmod +x /mnt/gentoo/GENTOOinstall-real
+	chroot /mnt/gentoo /bin/bash -c "/GENTOOinstall-real"
+fi
 curl -o /genfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
 chmod +x /genfstab
 (cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
