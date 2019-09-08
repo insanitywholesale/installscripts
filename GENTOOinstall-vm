@@ -37,7 +37,8 @@ echo '#::1     localhost' >> /etc/hosts
 curl -o https://gitlab.com/insanitywholesale/dotfiles/raw/master/kernel/config-qemukvm-4.19.57-gentoo-gentoo-stable
 (cd /usr/src/linux && make olddefconfig && make -j2 && make modules_install && make install && genkernel --install initramfs)
 curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/grub
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
+#grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
+grub-install /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 useradd -m -G audio,video,portage,wheel angle
 echo "angle:fail" | chpasswd
