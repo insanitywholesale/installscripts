@@ -3,14 +3,14 @@
 mkdir -p /mnt/gentoo
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
 if [ "$1" = "vm" ]; then
-	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted-handbook.txt -o parted.txt
-	parted -a optimal /dev/sda < parted.txt #might change to the hybrid uefi/bios partition scheme of the handbook
+	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted-handbook.txt -o parted.txt -o parted.txt
+	parted -a optimal /dev/sda < parted.txt
 	mkfs.fat -F32 /dev/sda2
 	mkfs.ext4 /dev/sda4
 	mount /dev/sda4 /mnt/gentoo
 else
-	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
-	parted -a optimal /dev/sda < parted.txt #might change to the hybrid uefi/bios partition scheme of the handbook
+	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted.txt -o parted.txt -o parted.txt
+	parted -a optimal /dev/sda < parted.txt
 	mkfs.fat -F32 /dev/sda1
 	mkfs.ext4 /dev/sda2
 	mount /dev/sda2 /mnt/gentoo
@@ -26,7 +26,7 @@ mount --rbind /dev /mnt/gentoo/dev
 test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
-if [ "$1" = "vm"]; then
+if [ "$1" = "vm" ]; then
 	curl -o /mnt/gentoo/GENTOOinstall-vm https://raw.githubusercontent.com/insanitywholesale/installscripts/master/GENTOOinstall-vm
 	chmod +x /mnt/gentoo/GENTOOinstall-vm
 	chroot /mnt/gentoo /bin/bash -c "/GENTOOinstall-vm"
