@@ -18,7 +18,8 @@ fi
 TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | egrep '^2' | grep -o '^\S*'`
 curl -o /mnt/gentoo/stage3.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
 (cd /mnt/gentoo && tar xpvf stage3.tar.xz --xattrs-include='*.*' --numeric-owner)
-curl -o /mnt/gentoo/etc/portage/make.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/tilde-make.conf #this needs changes
+cp /mnt/gentoo/etc/portage/make.conf /mnt/gentoo/etc/portage/make.conf.bak
+curl -o /mnt/gentoo/etc/portage/make.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/server-make.conf #this needs changes
 cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 mount --types proc /proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys

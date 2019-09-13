@@ -21,7 +21,11 @@ eselect locale set $LOCALE
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 mkdir /etc/portage/patches
 echo "app-admin/rsyslog gnutls openssl" > /etc/portage/package.use/rsyslog
+echo "sys-apps/util-linux static-libs" > /etc/portage/package.use/utillinux
 emerge -v --noreplace netifrc
+mkdir /etc/portage/package.license
+touch /etc/portage/package.license/zz-autolicense
+echo 'ACCEPT_LICENSE="*"' >> /etc/portage/make.conf
 emerge -v linux-firmware gentoo-sources sudo pciutils grub vim tmux cronie rsyslog netifrc layman genkernel
 (cd /etc/init.d && ln -s net.lo net.eth0)
 rc-update add net.eth0 default
@@ -41,6 +45,6 @@ curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/mast
 grub-install /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 useradd -m -G audio,video,portage,wheel angle
-echo "angle:fail" | chpasswd
-echo "root:fail" | chpasswd
+#echo "angle:fail" | chpasswd
+#echo "root:fail" | chpasswd
 echo "exiting chroot"
