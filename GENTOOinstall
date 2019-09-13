@@ -36,7 +36,7 @@ else
 	chmod +x /mnt/gentoo/GENTOOinstall-real
 	chroot /mnt/gentoo /bin/bash -c "/GENTOOinstall-real"
 fi
-curl -o /genfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
-chmod +x /genfstab
-(cd / && ./genfstab -U /mnt/gentoo > /etc/fstab)
+curl -o /root/genfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
+chmod +x /root/genfstab
+(cd /root && ./genfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab)
 echo "if something is broken, hmu"
