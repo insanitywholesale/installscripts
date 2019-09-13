@@ -1,12 +1,20 @@
 #!/bin/bash -x
 
-mkdir /mnt/gentoo
-curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+mkdir -p /mnt/gentoo
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
-parted -a optimal /dev/sda < parted-handbook.txt #might change to the hybrid uefi/bios partition scheme of the handbook
-mkfs.fat -F32 /dev/sda1
-mkfs.ext4 /dev/sda2
-mount /dev/sda2 /mnt/gentoo
+if [ "$1" = "vm" ]; then
+	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted-handbook.txt -o parted.txt
+	parted -a optimal /dev/sda < parted.txt #might change to the hybrid uefi/bios partition scheme of the handbook
+	mkfs.fat -F32 /dev/sda2
+	mkfs.ext4 /dev/sda4
+	mount /dev/sda4 /mnt/gentoo
+else
+	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+	parted -a optimal /dev/sda < parted.txt #might change to the hybrid uefi/bios partition scheme of the handbook
+	mkfs.fat -F32 /dev/sda1
+	mkfs.ext4 /dev/sda2
+	mount /dev/sda2 /mnt/gentoo
+fi
 TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | egrep '^2' | grep -o '^\S*'`
 curl -o /mnt/gentoo/stage3.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
 (cd /mnt/gentoo && tar xpvf stage3.tar.xz --xattrs-include='*.*' --numeric-owner)
@@ -15,7 +23,6 @@ cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 mount --types proc /proc /mnt/gentoo/proc
 mount --rbind /sys /mnt/gentoo/sys
 mount --rbind /dev /mnt/gentoo/dev
-mount /dev/sda1 /mnt/gentoo/boot
 test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
 chmod 1777 /dev/shm
