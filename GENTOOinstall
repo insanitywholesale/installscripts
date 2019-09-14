@@ -39,4 +39,6 @@ fi
 curl -o /root/genfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
 chmod +x /root/genfstab
 (cd /root && ./genfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab)
+echo "set root password"
+chroot /mnt/gentoo /usr/bin/passwd
 echo "if something is broken, hmu"

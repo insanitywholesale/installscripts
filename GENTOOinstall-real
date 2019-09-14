@@ -7,21 +7,20 @@ mkdir /etc/portage/repos.conf
 curl -o /etc/portage/repos.conf/gentoo.conf https://gitlab.com/insanitywholesale/dotfiles/raw/master/gentoo/gentoo.conf
 emerge-webrsync
 eselect profile list
-read PROFILE
-eselect profile set $PROFILE
+eselect profile set 16
 echo "Europe/Athens" > /etc/timezone
 emerge --config sys-libs/timezone-data
 echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 echo 'en_US ISO-8859-1' >> /etc/locale.gen
 locale-gen
-eselect locale list
-echo "enter locale number"
-read LOCALE
-eselect locale set $LOCALE
+eselect locale set 5
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 mkdir /etc/portage/patches
 echo "app-admin/rsyslog gnutls openssl" > /etc/portage/package.use/rsyslog
 emerge -v --noreplace netifrc
+mkdir /etc/portage/package.license
+touch /etc/portage/package.license/zz-autolicense
+echo 'ACCEPT_LICENSE="* -@EULA"' >> /etc/portage/make.conf
 emerge -v linux-firmware gentoo-sources sudo pciutils grub vim tmux cronie rsyslog netifrc layman genkernel
 (cd /etc/init.d && ln -s net.lo net.eth0)
 rc-update add net.eth0 default
@@ -40,6 +39,4 @@ curl -o /etc/default/grub https://gitlab.com/insanitywholesale/dotfiles/raw/mast
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable
 grub-mkconfig -o /boot/grub/grub.cfg
 useradd -m -G audio,video,portage,wheel angle
-echo "angle:fail" | chpasswd
-echo "root:fail" | chpasswd
 echo "exiting chroot"
