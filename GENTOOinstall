@@ -15,7 +15,7 @@ else
 	mkfs.ext4 /dev/sda2
 	mount /dev/sda2 /mnt/gentoo
 fi
-TARBALL="$(curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | grep '^2' | grep -o '^\S*')"
+TARBALL="$(curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt | grep '^2[^[:space:]]*')"
 curl -o /mnt/gentoo/stage3.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
 (cd /mnt/gentoo && tar xpvf stage3.tar.xz --xattrs-include='*.*' --numeric-owner)
 cp /mnt/gentoo/etc/portage/make.conf /mnt/gentoo/etc/portage/make.conf.bak
