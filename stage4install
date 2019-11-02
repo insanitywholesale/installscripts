@@ -44,7 +44,8 @@ mount --make-rslave /mnt/gentoo/sys
 mount --rbind /dev /mnt/gentoo/dev
 mount --make-rslave /mnt/gentoo/dev
 
-curl -o /mnt/gentoo/mkfstab https://github.com/insanitywholesale/installscripts/blob/master/generatefilesystable
+curl -o /mnt/gentoo/mkfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
+chmod +c /mnt/gentoo/mkfstab
 bash -c '/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
 
 chroot /mnt/gentoo /bin/bash -c 'grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable'
