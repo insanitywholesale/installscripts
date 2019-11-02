@@ -50,6 +50,6 @@ bash -c '/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
 
 chroot /mnt/gentoo /bin/bash -c 'grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable'
 chroot /mnt/gentoo /bin/bash -c 'grub-mkconfig -o /boot/grub/grub.cfg'
-chroot /mnt/gentoo /bin/bash -c 'echo "root:fail" | chpasswd'
+chroot /mnt/gentoo /bin/bash -c 'echo "root:failafqr" | chpasswd'
 
 #echo 'run the following command to set a root password: "passwd --root /mnt/gentoo root"'
