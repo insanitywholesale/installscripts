@@ -13,27 +13,17 @@ fi
 DRIVE="$1"
 dd if=/dev/zero of=/dev/"$DRIVE" bs=1024 count=1 conv=notrunc
 
-if [ ! -z "$2" ]; then
-	if [ -d /sys/firmware/efi ]; then
-		curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
-		parted -a optimal /dev/"$DRIVE" < parted.txt
-	else
-		# bios
-	fi
-elif [ "$2" = "uefi"] || [ "$2" = "UEFI" ]; then
-	curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
-	parted -a optimal /dev/"$DRIVE" < parted.txt
-elif [ "$2" = "bios" ] || [ "$2" = "BIOS"]; then
-	# bios shizzle here
-fi
+curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable -o parted.txt
+parted -a optimal /dev/"$DRIVE" < parted.txt
 
-mkfs.fat -F32 /dev/"$DRIVE"1
-mkfs.ext4 /dev/"$DRIVE"2
+mkfs.fat -F32 /dev/"$DRIVE"2
+mkfs.ext4 /dev/"$DRIVE"4
+mkswap /dev/"$DRIVE"3
 
-mkdir /mnt/gentoo
-mount /dev/"$DRIVE"2 /mnt/gentoo
-mkdir /mnt/gentoo/boot
-mount /dev/"$DRIVE"1 /mnt/gentoo/boot
+mkdir -p /mnt/gentoo/boot
+mount /dev/"$DRIVE"4 /mnt/gentoo
+mount /dev/"$DRIVE"2 /mnt/gentoo/boot
+swapon /dev/"$DRIVE"3
 
 TARBALL=`curl http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/latest-stage4-amd64-minimal.txt | egrep '^2' | grep -o '^\S*'`
 curl -o /mnt/gentoo/stage4.tar.xz http://ftp.ntua.gr/pub/linux/gentoo/releases/amd64/autobuilds/$TARBALL
@@ -46,11 +36,9 @@ mount --rbind /dev /mnt/gentoo/dev
 mount --make-rslave /mnt/gentoo/dev
 
 curl -o /mnt/gentoo/mkfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
-chmod +c /mnt/gentoo/mkfstab
+chmod +x /mnt/gentoo/mkfstab
 bash -c '/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
 
 chroot /mnt/gentoo /bin/bash -c 'grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable'
 chroot /mnt/gentoo /bin/bash -c 'grub-mkconfig -o /boot/grub/grub.cfg'
-chroot /mnt/gentoo /bin/bash -c 'echo "root:failafqr" | chpasswd'
-
-#echo 'run the following command to set a root password: "passwd --root /mnt/gentoo root"'
+chroot /mnt/gentoo /bin/bash -c 'echo "root:fail4392" | chpasswd'
