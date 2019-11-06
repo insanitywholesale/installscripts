@@ -22,7 +22,7 @@ mkswap /dev/"$DRIVE"3
 
 mkdir -p /mnt/gentoo
 mount /dev/"$DRIVE"4 /mnt/gentoo
-mkdir -o /mnt/gentoo/boot
+mkdir -p /mnt/gentoo/boot
 mount /dev/"$DRIVE"2 /mnt/gentoo/boot
 swapon /dev/"$DRIVE"3
 
@@ -38,8 +38,9 @@ mount --make-rslave /mnt/gentoo/dev
 
 curl -o /mnt/gentoo/mkfstab https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable
 chmod +x /mnt/gentoo/mkfstab
-bash -c '/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab'
+bash -c "/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab"
 
-chroot /mnt/gentoo /bin/bash -c 'grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable'
-chroot /mnt/gentoo /bin/bash -c 'grub-mkconfig -o /boot/grub/grub.cfg'
-chroot /mnt/gentoo /bin/bash -c 'echo "root:fail4392" | chpasswd'
+chroot /mnt/gentoo /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable"
+chroot /mnt/gentoo /bin/bash -c "grub-install /dev/$DRIVE"
+chroot /mnt/gentoo /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+chroot /mnt/gentoo /bin/bash -c "echo 'root:fail4392' | chpasswd"
