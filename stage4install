@@ -40,7 +40,14 @@ curl -o /mnt/gentoo/mkfstab https://raw.githubusercontent.com/insanitywholesale/
 chmod +x /mnt/gentoo/mkfstab
 bash -c "/mnt/gentoo/mkfstab -U /mnt/gentoo > /mnt/gentoo/etc/fstab"
 
-chroot /mnt/gentoo /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable"
-chroot /mnt/gentoo /bin/bash -c "grub-install /dev/$DRIVE"
+chroot /mnt/gentoo /bin/bash -c "emerge-webrsync"
+chroot /mnt/gentoo /bin/bash -c "(cd /etc/init.d && ln -s net.lo net.eth0)"
+if [ "$2" = "uefi"]
+	chroot /mnt/gentoo /bin/bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=gentoo --removable"
+else
+	chroot /mnt/gentoo /bin/bash -c "grub-install /dev/$DRIVE"
+fi
+curl -o /mnt/gentoo/etc/default/grub https://raw.githubusercontent.com/insanitywholesale/installscripts/master/stage4grubcfg
 chroot /mnt/gentoo /bin/bash -c "grub-mkconfig -o /boot/grub/grub.cfg"
+chroot /mnt/gentoo /bin/bash -c 'echo config_eth0="dhcp" > /etc/conf.d/net'
 chroot /mnt/gentoo /bin/bash -c "echo 'root:fail4392' | chpasswd"
