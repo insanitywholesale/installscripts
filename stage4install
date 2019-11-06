@@ -13,15 +13,16 @@ fi
 DRIVE="$1"
 dd if=/dev/zero of=/dev/"$DRIVE" bs=1024 count=1 conv=notrunc
 
-curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/generatefilesystable -o parted.txt
+curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted-handbook.txt -o parted.txt
 parted -a optimal /dev/"$DRIVE" < parted.txt
 
 mkfs.fat -F32 /dev/"$DRIVE"2
 mkfs.ext4 /dev/"$DRIVE"4
 mkswap /dev/"$DRIVE"3
 
-mkdir -p /mnt/gentoo/boot
+mkdir -p /mnt/gentoo
 mount /dev/"$DRIVE"4 /mnt/gentoo
+mkdir -o /mnt/gentoo/boot
 mount /dev/"$DRIVE"2 /mnt/gentoo/boot
 swapon /dev/"$DRIVE"3
 
