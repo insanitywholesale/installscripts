@@ -29,7 +29,7 @@ KODIKAS SEGMENT
         MOV DX,BX 
         
         ;MOV DL,AL
-        ADD DL,48
+        ADD DX,48
         MOV AH,2
         INT 21H
     
@@ -41,7 +41,7 @@ KODIKAS ENDS
 DEDOMENA SEGMENT  
     N1 DB 3
     N2 DB 5
-    MINIMA DB "TO APOTELESMA EINAI: $"
+    MINIMA DB "TO APOTELESMA EINAI: ", 10, 13, "$"
 DEDOMENA ENDS
 
 
