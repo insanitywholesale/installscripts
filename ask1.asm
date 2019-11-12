@@ -3,13 +3,13 @@ KODIKAS SEGMENT
     ASSUME CS:KODIKAS, DS:DEDOMENA
     ARXI:   
         MOV AX,DEDOMENA	
-	    MOV DS,AX	
+	MOV DS,AX	
 
         LEA DX,MINIMA
         MOV AH,9
         INT 21H
         
-        MOV AL,N1
+        MOV AL,N2
         MUL AL
         
         ;N*N = N^2 result is in AX
@@ -18,7 +18,7 @@ KODIKAS SEGMENT
         MOV BX, AX
         ;move 2 into AL for multiplication
         MOV AL,2
-        MUL N1
+        MUL N2
         ;AX now has 2*N
         MOV CX,AX
         ;BX has N^2-2*N
@@ -26,14 +26,19 @@ KODIKAS SEGMENT
         ;ending with INC
         INC BX
         ;move result into DX to display
-        MOV DX,BX 
+        MOV AX,BX
+        MOV DL,10
         
-        ;MOV DL,AL
-        ADD DX,48
+        
+        DIV DL
+        MOV BX,AX 
+        MOV DL,BL
+        ADD DL,48
         MOV AH,2
         INT 21H
-    
-        MOV AH,4CH
+        MOV DL,BH
+        ADD DL,48
+        MOV AH,2
         INT 21H
 	
 KODIKAS ENDS
