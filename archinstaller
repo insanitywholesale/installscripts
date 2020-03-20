@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 timedatectl set-ntp true
-curl https://gitlab.com/insanitywholesale/installscripts/raw/master/parted.txt -o parted.txt
+curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted.txt -o parted.txt
 dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
 parted -a optimal /dev/sda < parted.txt
 mkfs.fat -F32 /dev/sda1
