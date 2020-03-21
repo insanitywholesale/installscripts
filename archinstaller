@@ -35,9 +35,9 @@ else
 	mkswap /mnt/swapfile
 	swapon /mnt/swapfile
 fi
-echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
-echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://mirrors.myaegean.gr/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
 genfstab -U /mnt > /mnt/etc/fstab
