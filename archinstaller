@@ -1,23 +1,45 @@
 #!/bin/bash -x
 
+if [ ! -b "$1" ]; then
+	echo "$1 doesn't exist" >&2
+	echo "defaulting to /dev/sda" >&2
+	DRIVE="/dev/sda"
+else
+	DRIVE="$1"
+fi
+
+
 timedatectl set-ntp true
-curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted.txt -o parted.txt
-dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
-parted -a optimal /dev/sda < parted.txt
-mkfs.fat -F32 /dev/sda1
-mkfs.ext4 /dev/sda2
-mount /dev/sda2 /mnt
-mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
-fallocate -l 4096M /mnt/swapfile
-chmod 600 /mnt/swapfile
-mkswap /mnt/swapfile
-swapon /mnt/swapfile
+if [ $2 == "hybrid" ]; then
+	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted-handbook.txt -o parted.txt
+	dd if=/dev/zero of="$DRIVE" bs=512 count=1 conv=notrunc
+	parted -a optimal "$DRIVE" < parted.txt
+	mkfs.fat -F32 "$DRIVE"2
+	mkfs.ext4 "$DRIVE"4
+	mount "$DRIVE"3 /mnt
+	mkdir /mnt/boot
+	mount "$DRIVE"2 /mnt/boot
+	mkswap "$DRIVE"3
+	swapon "$DRIVE"3
+else
+	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted.txt -o parted.txt
+	dd if=/dev/zero of="$DRIVE" bs=512 count=1 conv=notrunc
+	parted -a optimal "$DRIVE" < parted.txt
+	mkfs.fat -F32 "$DRIVE"1
+	mkfs.ext4 "$DRIVE"2
+	mount "$DRIVE"2 /mnt
+	mkdir /mnt/boot
+	mount "$DRIVE"1 /mnt/boot
+	fallocate -l 4096M /mnt/swapfile
+	chmod 600 /mnt/swapfile
+	mkswap /mnt/swapfile
+	swapon /mnt/swapfile
+fi
 echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://mirrors.myaegean.gr/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
+pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
 genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Athens /etc/localtime
 arch-chroot /mnt hwclock --systohc
