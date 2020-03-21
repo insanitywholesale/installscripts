@@ -48,7 +48,7 @@ arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 arch-chroot /mnt locale-gen
 arch-chroot /mnt echo 'archfail' > /etc/hostname
 arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
-arch-chroot -u angle bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp .xinitrc .bashrc .bash_profile ~/'
+arch-chroot -u angle bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp -v {.xinitrc,.bashrc,.bash_profile} /home/angle/'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/st-usable && cd st-usable && make install'
 arch-chroot /mnt bash -c "echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheelaccess"
