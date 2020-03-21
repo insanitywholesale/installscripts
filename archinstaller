@@ -10,7 +10,7 @@ fi
 
 
 timedatectl set-ntp true
-if [ $2 == "hybrid" ]; then
+if [ "$2" == "hybrid" ]; then
 	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted-handbook.txt -o parted.txt
 	dd if=/dev/zero of="$DRIVE" bs=512 count=1 conv=notrunc
 	parted -a optimal "$DRIVE" < parted.txt
