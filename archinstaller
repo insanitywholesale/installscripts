@@ -16,7 +16,7 @@ if [ $2 == "hybrid" ]; then
 	parted -a optimal "$DRIVE" < parted.txt
 	mkfs.fat -F32 "$DRIVE"2
 	mkfs.ext4 "$DRIVE"4
-	mount "$DRIVE"3 /mnt
+	mount "$DRIVE"4 /mnt
 	mkdir /mnt/boot
 	mount "$DRIVE"2 /mnt/boot
 	mkswap "$DRIVE"3
