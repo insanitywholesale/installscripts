@@ -48,14 +48,14 @@ arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 arch-chroot /mnt locale-gen
 arch-chroot /mnt echo 'archfail' > /etc/hostname
 arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
-arch-chroot /mnt bash -c "echo 'angle:fail4190' | chpasswd"
-arch-chroot /mnt bash -c "echo 'root:fail41720' | chpasswd"
+arch-chroot -u angle bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp .xinitrc .bashrc .bash_profile ~/'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/st-usable && cd st-usable && make install'
-arch-chroot /mnt bash -c "echo 'exec dwm' > /home/angle/.xinitrc"
-arch-chroot /mnt bash -c "echo 'setxkbmap -layout us -option caps:escape' >> /home/angle/.xinitrc"
-arch-chroot /mnt bash -c "echo 'while true; do xsetroot -name "$(date +'%a %e %b %H:%M')" && sleep 5; done' >> /home/angle/.xinitrc"
 arch-chroot /mnt bash -c "echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheelaccess"
+arch-chroot /mnt bash -c "echo 'angle:fail4190' | chpasswd"
+arch-chroot /mnt bash -c "echo 'root:fail41720' | chpasswd"
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch --removable
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 arch-chroot /mnt systemctl enable NetworkManager
+echo "installation of Arch Linux has completed."
+echo "please reboot your system"
