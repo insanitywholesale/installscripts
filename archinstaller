@@ -12,7 +12,8 @@ fi
 timedatectl set-ntp true
 if [ "$2" == "hybrid" ]; then
 	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted-handbook.txt -o parted.txt
-	dd if=/dev/zero of="$DRIVE" bs=512 count=4 conv=notrunc
+	dd if=/dev/zero of="$DRIVE" bs=2048 count=4 conv=notrunc
+	sync
 	parted -a optimal "$DRIVE" < parted.txt
 	mkfs.fat -F32 "$DRIVE"2
 	mkfs.ext4 "$DRIVE"4
@@ -23,7 +24,8 @@ if [ "$2" == "hybrid" ]; then
 	swapon "$DRIVE"3
 else
 	curl https://raw.githubusercontent.com/insanitywholesale/installscripts/master/parted.txt -o parted.txt
-	dd if=/dev/zero of="$DRIVE" bs=512 count=4 conv=notrunc
+	dd if=/dev/zero of="$DRIVE" bs=2048 count=4 conv=notrunc
+	sync
 	parted -a optimal "$DRIVE" < parted.txt
 	mkfs.fat -F32 "$DRIVE"1
 	mkfs.ext4 "$DRIVE"2
@@ -39,7 +41,7 @@ echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' > /e
 echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://mirrors.myaegean.gr/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono otf-fira-mono #cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
+pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono otf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest kdenlive
 genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Athens /etc/localtime
 arch-chroot /mnt hwclock --systohc
@@ -49,7 +51,6 @@ arch-chroot /mnt locale-gen
 arch-chroot /mnt echo 'archfail' > /etc/hostname
 arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
 arch-chroot -u angle /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp -v {.xinitrc,.bashrc,.bash_profile} /home/angle/'
-arch-chroot -u angle /mnt bash -c 'cd /tmp && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -sri --noconfirm && cd'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/st-usable && cd st-usable && make install'
 arch-chroot /mnt bash -c "echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheelaccess"
