@@ -39,7 +39,7 @@ echo 'Server = http://ftp.cc.uoc.gr/mirrors/linux/archlinux/$repo/os/$arch' > /e
 echo 'Server = https://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 echo 'Server = http://mirrors.myaegean.gr/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
+pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono otf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest
 genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Athens /etc/localtime
 arch-chroot /mnt hwclock --systohc
@@ -52,7 +52,7 @@ arch-chroot /mnt bash -c "echo 'angle:fail4190' | chpasswd"
 arch-chroot /mnt bash -c "echo 'root:fail41720' | chpasswd"
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/st-usable && cd st-usable && make install'
+arch-chroot /mnt bash -c "echo 'exec dwm' > /home/angle/.xinitrc"
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch --removable
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 arch-chroot /mnt systemctl enable NetworkManager
-echo 'please run the following command to set a root password: passwd --root /mnt root'
