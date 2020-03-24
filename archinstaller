@@ -49,6 +49,9 @@ arch-chroot /mnt echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 arch-chroot /mnt locale-gen
 arch-chroot /mnt echo 'archfail' > /etc/hostname
+artools-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
+artools-chroot /mnt echo '::1     localhost' >> /etc/hosts
+artools-chroot /mnt echo '127.0.1.1   archfail.localdomain    archfail' >> /etc/hosts
 arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
 arch-chroot -u angle /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp -v {.xinitrc,.bashrc,.bash_profile} /home/angle/'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
