@@ -43,15 +43,16 @@ echo 'Server = http://foss.aueb.gr/mirrors/linux/archlinux/$repo/os/$arch' >> /e
 echo 'Server = http://mirrors.myaegean.gr/linux/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel openssh man linux-lts linux-firmware efibootmgr grub vim tmux htop git neofetch xorg-server xorg-xinit xorg-xkill xorg-setxkbmap xorg-xsetroot dmenu feh ttf-fira-mono otf-fira-mono cantarell-fonts pango networkmanager network-manager-applet lxappearance gnome-themes-extra breeze-gtk qt5ct virt-manager libvirt qemu ovmf docker docker-compose netbeans go nodejs powertop tlp acpi acpid mpv mpd ncmpcpp firefox thunderbird qutebrowser links w3m lynx minetest kdenlive
 genfstab -U /mnt > /mnt/etc/fstab
+echo 'archfail' > /mnt/etc/hostname
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Athens /etc/localtime
 arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 arch-chroot /mnt echo 'LANG=en_US.UTF-8' > /etc/locale.conf
 arch-chroot /mnt locale-gen
-arch-chroot /mnt echo 'archfail' > /etc/hostname
-artools-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
-artools-chroot /mnt echo '::1     localhost' >> /etc/hosts
-artools-chroot /mnt echo '127.0.1.1   archfail.localdomain    archfail' >> /etc/hosts
+arch-chroot /mnt hostnamectl set-hostname archfail
+arch-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
+arch-chroot /mnt echo '::1     localhost' >> /etc/hosts
+arch-chroot /mnt echo '127.0.1.1   archfail.localdomain    archfail' >> /etc/hosts
 arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
 arch-chroot -u angle /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp -v {.xinitrc,.vimrc,.bashrc,.bash_profile} /home/angle/'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
