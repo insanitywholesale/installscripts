@@ -53,7 +53,7 @@ arch-chroot /mnt hostnamectl set-hostname archfail
 arch-chroot /mnt echo '127.0.0.1   localhost' > /etc/hosts
 arch-chroot /mnt echo '::1     localhost' >> /etc/hosts
 arch-chroot /mnt echo '127.0.1.1   archfail.localdomain    archfail' >> /etc/hosts
-arch-chroot /mnt useradd -m -G audio,video,wheel,tty -s /bin/bash angle
+arch-chroot /mnt useradd -m -G audio,video,wheel,tty,docker -s /bin/bash angle
 arch-chroot -u angle /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dotfiles && cd dotfiles && cp -v {.xinitrc,.vimrc,.bashrc,.bash_profile} /home/angle/'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/dwm-usable && cd dwm-usable && make install'
 arch-chroot /mnt bash -c 'cd /tmp && git clone https://gitlab.com/insanitywholesale/st-usable && cd st-usable && make install'
